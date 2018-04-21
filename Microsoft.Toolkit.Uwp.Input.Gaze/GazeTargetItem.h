@@ -23,11 +23,12 @@ BEGIN_NAMESPACE_GAZE_INPUT
 
 ref struct GazeTargetItem sealed
 {
-	property int64 DetailedTime;
-	property int64 OverflowTime;
-	property int64 ElapsedTime { int64 get() { return DetailedTime + OverflowTime; } }
-	property int64 NextStateTime;
-	property int64 LastTimestamp;
+internal:
+	TimeSpan DetailedTime;
+	TimeSpan OverflowTime;
+	property TimeSpan ElapsedTime { TimeSpan get() { return TimeSpan{ DetailedTime.Duration + OverflowTime.Duration }; } }
+	TimeSpan NextStateTime;
+	property TimeSpan LastTimestamp;
 	property GazePointerState ElementState;
 	property UIElement^ TargetElement;
 	property int RepeatCount;
@@ -38,11 +39,11 @@ ref struct GazeTargetItem sealed
 		TargetElement = target;
 	}
 
-	void Reset(int nextStateTime)
+	void Reset(TimeSpan nextStateTime)
 	{
 		ElementState = GazePointerState::PreEnter;
-		DetailedTime = 0;
-		OverflowTime = 0;
+		DetailedTime.Duration = 0;
+		OverflowTime.Duration = 0;
 		NextStateTime = nextStateTime;
 		RepeatCount = 0;
 		MaxRepeatCount = GazeApi::GetMaxRepeatCount(TargetElement);
@@ -91,8 +92,8 @@ private:
 	void RaiseProgressEvent(GazeProgressState state);
 
 	GazePointerState _notifiedPointerState = GazePointerState::Exit;
-	int64 _prevStateTime;
-	int64 _nextStateTime;
+	TimeSpan _prevStateTime;
+	TimeSpan _nextStateTime;
 	GazeProgressState _notifiedProgressState = GazeProgressState::Idle;
 	Popup^ _feedbackPopup;
 };

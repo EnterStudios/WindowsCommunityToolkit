@@ -23,14 +23,14 @@ BEGIN_NAMESPACE_GAZE_INPUT
 
 void GazeTargetItem::RaiseProgressEvent(GazeProgressState state)
 {
-    // TODO: We should eliminate non-invokable controls before we arrive here!
-    if (dynamic_cast<Page^>(TargetElement) != nullptr)
-    {
-        return;
-    }
+	// TODO: We should eliminate non-invokable controls before we arrive here!
+	if (dynamic_cast<Page^>(TargetElement) != nullptr)
+	{
+		return;
+	}
 
-    if (_notifiedProgressState != state || state == GazeProgressState::Progressing)
-    {
+	if (_notifiedProgressState != state || state == GazeProgressState::Progressing)
+	{
 		auto handled = false;
 
 		auto gazeElement = GazeApi::GetGazeElement(TargetElement);
@@ -39,57 +39,57 @@ void GazeTargetItem::RaiseProgressEvent(GazeProgressState state)
 			handled = gazeElement->RaiseProgressFeedback(TargetElement, state, ElapsedTime - _prevStateTime, _nextStateTime - _prevStateTime);
 		}
 
-        if (!handled && state != GazeProgressState::Idle)
-        {
-            if (_feedbackPopup == nullptr)
-            {
-                _feedbackPopup = GazeFeedbackPopupFactory::Get();
-            }
+		if (!handled && state != GazeProgressState::Idle)
+		{
+			if (_feedbackPopup == nullptr)
+			{
+				_feedbackPopup = GazeFeedbackPopupFactory::Get();
+			}
 
-            auto control = safe_cast<Control^>(TargetElement);
+			auto control = safe_cast<Control^>(TargetElement);
 
-            auto transform = control->TransformToVisual(_feedbackPopup);
-            auto bounds = transform->TransformBounds(*ref new Rect(*ref new Point(0, 0), 
-                *ref new Size(safe_cast<float>(control->ActualWidth), safe_cast<float>(control->ActualHeight))));
-            auto rectangle = safe_cast<Rectangle^>(_feedbackPopup->Child);
+			auto transform = control->TransformToVisual(_feedbackPopup);
+			auto bounds = transform->TransformBounds(*ref new Rect(*ref new Point(0, 0),
+				*ref new Size(safe_cast<float>(control->ActualWidth), safe_cast<float>(control->ActualHeight))));
+			auto rectangle = safe_cast<Rectangle^>(_feedbackPopup->Child);
 
-            if (state == GazeProgressState::Progressing)
-            {
-                auto progress = ((double)(ElapsedTime - _prevStateTime)) / (_nextStateTime - _prevStateTime);
+			if (state == GazeProgressState::Progressing)
+			{
+				auto progress = ((double)(ElapsedTime - _prevStateTime).Duration) / (_nextStateTime - _prevStateTime).Duration;
 
-                if (0 <= progress && progress < 1)
-                {
-                    rectangle->Stroke = ProgressingBrush;
-                    rectangle->Width = (1 - progress) * bounds.Width;
-                    rectangle->Height = (1 - progress) * bounds.Height;
+				if (0 <= progress && progress < 1)
+				{
+					rectangle->Stroke = ProgressingBrush;
+					rectangle->Width = (1 - progress) * bounds.Width;
+					rectangle->Height = (1 - progress) * bounds.Height;
 
-                    _feedbackPopup->HorizontalOffset = bounds.Left + progress * bounds.Width / 2;
-                    _feedbackPopup->VerticalOffset = bounds.Top + progress * bounds.Height / 2;
-                }
-            }
-            else
-            {
-                rectangle->Stroke = CompleteBrush;
-                rectangle->Width = bounds.Width;
-                rectangle->Height = bounds.Height;
+					_feedbackPopup->HorizontalOffset = bounds.Left + progress * bounds.Width / 2;
+					_feedbackPopup->VerticalOffset = bounds.Top + progress * bounds.Height / 2;
+				}
+			}
+			else
+			{
+				rectangle->Stroke = CompleteBrush;
+				rectangle->Width = bounds.Width;
+				rectangle->Height = bounds.Height;
 
-                _feedbackPopup->HorizontalOffset = bounds.Left;
-                _feedbackPopup->VerticalOffset = bounds.Top;
-            }
+				_feedbackPopup->HorizontalOffset = bounds.Left;
+				_feedbackPopup->VerticalOffset = bounds.Top;
+			}
 
-            _feedbackPopup->IsOpen = true;
-        }
-        else
-        {
-            if (_feedbackPopup != nullptr)
-            {
-                GazeFeedbackPopupFactory::Return(_feedbackPopup);
-                _feedbackPopup = nullptr;
-            }
-        }
-    }
+			_feedbackPopup->IsOpen = true;
+		}
+		else
+		{
+			if (_feedbackPopup != nullptr)
+			{
+				GazeFeedbackPopupFactory::Return(_feedbackPopup);
+				_feedbackPopup = nullptr;
+			}
+		}
+	}
 
-    _notifiedProgressState = state;
+	_notifiedProgressState = state;
 }
 
 END_NAMESPACE_GAZE_INPUT

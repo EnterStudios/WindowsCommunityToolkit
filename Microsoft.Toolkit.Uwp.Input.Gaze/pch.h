@@ -35,5 +35,15 @@ public:
     }
 };
 
+inline static TimeSpan operator + (const TimeSpan& lhs, const TimeSpan& rhs) { return TimeSpan{ lhs.Duration + rhs.Duration }; }
+inline static TimeSpan operator - (const TimeSpan& lhs, const TimeSpan& rhs) { return TimeSpan{ lhs.Duration - rhs.Duration }; }
+inline static TimeSpan operator * (int lhs, const TimeSpan& rhs) { return TimeSpan{ lhs*rhs.Duration }; }
+inline static bool operator < (const TimeSpan& lhs, const TimeSpan& rhs) { return lhs.Duration < rhs.Duration; }
+inline static bool operator <= (const TimeSpan& lhs, const TimeSpan& rhs) { return lhs.Duration <= rhs.Duration; }
+inline static bool operator > (const TimeSpan& lhs, const TimeSpan& rhs) { return lhs.Duration > rhs.Duration; }
+inline static bool operator >= (const TimeSpan& lhs, const TimeSpan& rhs) { return lhs.Duration >= rhs.Duration; }
+inline static bool operator == (const TimeSpan& lhs, const TimeSpan& rhs) { return lhs.Duration == rhs.Duration; }
+inline static bool operator != (const TimeSpan& lhs, const TimeSpan& rhs) { return lhs.Duration != rhs.Duration; }
+
 #define BEGIN_NAMESPACE_GAZE_INPUT namespace Microsoft { namespace Toolkit { namespace Uwp { namespace Input { namespace Gaze {
 #define END_NAMESPACE_GAZE_INPUT } } } } }

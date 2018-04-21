@@ -22,9 +22,10 @@ BEGIN_NAMESPACE_GAZE_INPUT
 
 ref struct GazeHistoryItem
 {
-    property UIElement^ HitTarget;
-    property int64 Timestamp;
-    property int64 Duration;
+internal:
+    UIElement^ HitTarget;
+    TimeSpan Timestamp;
+    TimeSpan Duration;
 };
 
 END_NAMESPACE_GAZE_INPUT
