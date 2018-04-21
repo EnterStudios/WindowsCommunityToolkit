@@ -22,7 +22,9 @@ public ref class GazeProgressEventArgs : public RoutedEventArgs
 public:
 	property GazeProgressState State;
 	property int64 ElapsedTicks;
+	property TimeSpan Elapsed { TimeSpan get() { return *ref new TimeSpan { 10 * ElapsedTicks }; } }
 	property int64 TriggerTicks;
+	property TimeSpan Trigger { TimeSpan get() { return *ref new TimeSpan { 10 * TriggerTicks }; } }
 	property bool Handled;
 internal:
 	GazeProgressEventArgs(GazeProgressState state, int64 elapsedTicks, int64 triggerTicks)
