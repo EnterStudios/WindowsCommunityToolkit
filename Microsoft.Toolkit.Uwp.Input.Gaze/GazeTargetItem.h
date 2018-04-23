@@ -21,12 +21,14 @@ namespace Shapes = Windows::UI::Xaml::Shapes;
 
 BEGIN_NAMESPACE_GAZE_INPUT
 
-ref struct GazeTargetItem sealed
+ref struct GazeTargetItem
 {
 internal:
+    static property GazeTargetItem^ NonInvokable{ GazeTargetItem^ get(); }
+
 	TimeSpan DetailedTime;
 	TimeSpan OverflowTime;
-	property TimeSpan ElapsedTime { TimeSpan get() { return TimeSpan{ DetailedTime.Duration + OverflowTime.Duration }; } }
+	property int64 ElapsedTime { int64 get() { return DetailedTime + OverflowTime; } }
 	TimeSpan NextStateTime;
 	property TimeSpan LastTimestamp;
 	property GazePointerState ElementState;
@@ -38,6 +40,12 @@ internal:
 	{
 		TargetElement = target;
 	}
+
+    static GazeTargetItem^ GetOrCreate(UIElement^ element);
+
+    virtual void Invoke() = 0;
+
+    virtual property bool IsInvokable { bool get() { return true; } }
 
 	void Reset(TimeSpan nextStateTime)
 	{

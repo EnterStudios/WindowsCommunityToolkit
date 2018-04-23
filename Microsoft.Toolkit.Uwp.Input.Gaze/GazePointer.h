@@ -41,10 +41,9 @@ public:
 
 	void LoadSettings(ValueSet^ settings);
 
-	void InvokeTarget(UIElement^ target);
-	void Reset();
-	void SetElementStateDelay(UIElement ^element, GazePointerState pointerState, TimeSpan stateDelay);
-	TimeSpan GetElementStateDelay(UIElement^ element, GazePointerState pointerState);
+    void Reset();
+    void SetElementStateDelay(UIElement ^element, GazePointerState pointerState, TimeSpan stateDelay);
+    TimeSpan GetElementStateDelay(UIElement^ element, GazePointerState pointerState);
 
 	// Provide a configurable delay for when the EyesOffDelay event is fired
 	// GOTCHA: this value requires that _eyesOffTimer is instantiated so that it
@@ -101,16 +100,13 @@ private:
 	void    InitializeGazeInputSource();
 	void    DeinitializeGazeInputSource();
 
-	GazeTargetItem^     GetOrCreateGazeTargetItem(UIElement^ target);
-	GazeTargetItem^     GetGazeTargetItem(UIElement^ target);
-	UIElement^          GetHitTarget(Point gazePoint);
-	UIElement^          ResolveHitTarget(Point gazePoint, TimeSpan timestamp);
+    void ActivateGazeTargetItem(GazeTargetItem^ target);
+    GazeTargetItem^          GetHitTarget(Point gazePoint);
+    GazeTargetItem^          ResolveHitTarget(Point gazePoint, TimeSpan timestamp);
 
-	bool    IsInvokable(UIElement^ target);
-
-	void    CheckIfExiting(TimeSpan curTimestamp);
-	void    GotoState(UIElement^ control, GazePointerState state);
-	void    RaiseGazePointerEvent(UIElement^ target, GazePointerState state, TimeSpan elapsedTime);
+    void    CheckIfExiting(TimeSpan curTimestamp);
+    void    GotoState(UIElement^ control, GazePointerState state);
+    void    RaiseGazePointerEvent(GazeTargetItem^ target, GazePointerState state, TimeSpan elapsedTime);
 
 	void OnGazeEntered(
 		GazeInputSourcePreview^ provider,
