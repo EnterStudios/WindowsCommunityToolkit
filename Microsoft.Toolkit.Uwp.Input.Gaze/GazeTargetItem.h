@@ -28,7 +28,7 @@ internal:
 
 	TimeSpan DetailedTime;
 	TimeSpan OverflowTime;
-	property int64 ElapsedTime { int64 get() { return DetailedTime + OverflowTime; } }
+	property TimeSpan ElapsedTime { TimeSpan get() { return DetailedTime + OverflowTime; } }
 	TimeSpan NextStateTime;
 	property TimeSpan LastTimestamp;
 	property GazePointerState ElementState;

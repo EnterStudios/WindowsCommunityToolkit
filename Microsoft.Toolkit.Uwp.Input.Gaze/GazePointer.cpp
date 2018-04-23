@@ -312,7 +312,7 @@ GazeTargetItem^ GazePointer::ResolveHitTarget(Point gazePoint, TimeSpan timestam
     auto historyItem = ref new GazeHistoryItem();
     historyItem->HitTarget = target;
     historyItem->Timestamp = timestamp;
-    historyItem->Duration = 0;
+    historyItem->Duration.Duration = 0;
     assert(historyItem->HitTarget != nullptr);
 
     // create new GazeTargetItem with a (default) total elapsed time of zero if one does not exist already.
@@ -342,12 +342,11 @@ GazeTargetItem^ GazePointer::ResolveHitTarget(Point gazePoint, TimeSpan timestam
 		_gazeHistory->RemoveAt(0);
 
 		// subtract the duration obtained from the oldest sample in _gazeHistory
-		auto targetItem = GetGazeTargetItem(evOldest->HitTarget);
-		assert((targetItem->DetailedTime - evOldest->Duration).Duration >= 0);
-		targetItem->DetailedTime -= evOldest->Duration;
-		if (targetItem->ElementState != GazePointerState::PreEnter)
+		assert((target->DetailedTime - evOldest->Duration).Duration >= 0);
+		target->DetailedTime -= evOldest->Duration;
+		if (target->ElementState != GazePointerState::PreEnter)
 		{
-			targetItem->OverflowTime += evOldest;
+			target->OverflowTime += evOldest;
 		}
 	}
 
@@ -407,7 +406,7 @@ void GazePointer::CheckIfExiting(TimeSpan curTimestamp)
 		auto targetElement = targetItem->TargetElement;
 		auto exitDelay = GetElementStateDelay(targetElement, GazePointerState::Exit);
 
-        long long idleDuration = curTimestamp - targetItem->LastTimestamp;
+        auto idleDuration = curTimestamp - targetItem->LastTimestamp;
         if (targetItem->ElementState != GazePointerState::PreEnter && idleDuration > exitDelay)
         {
             targetItem->ElementState = GazePointerState::PreEnter;
